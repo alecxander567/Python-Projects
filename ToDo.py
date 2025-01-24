@@ -15,16 +15,18 @@ def save_tasks(myTask):
     with open("local_storage.json", "w") as file:
         json.dump(myTask, file)
 
-def doneTask(myTask):
+def doneTask(myTask, done):
     while True:
+        if len(myTask) == 0:
+            print("\nNo available tasks.")
+            break
+
         print("\nSelect a task finished : ")
 
         for i, task in enumerate(myTask):
             print(f"{i}: {task}")
 
         print("\n")
-
-        done = int(input("Select (-1 to exit): "))
 
         if done == -1:
             break
@@ -33,32 +35,35 @@ def doneTask(myTask):
             print("\nTask not in the list")
             continue
         
-        myTask.pop(done)  
-
-        if len(myTask) == 0:
+        tasksDone.append(myTask.pop(done))
+        if  myTask == None:
             print("\nAll task are done!")
             break
 
         print("\nTask done!")
         save_tasks(myTask)
+        save_tasks(tasksDone)
         return myTask
     
 def addTask(myTask):
+    newTask = []
     try:
         add = int(input("\nEnter how many task to add : "))
 
         if add <= 0:
-            print("\nImaginary numbers are not allowed!")
+            print("\n0 and negative numbers are not allowed!")
             return myTask
         
-        newTask = myTask.copy()
+        if myTask == None:
+            print("\nAdd task : ")
+        else:
+            newTask = myTask.copy()
 
         for i in range(add):
-            addedTask = input("\nEnter the tasks to add : ")
+            addedTask = input("Enter the tasks to add : ")
             newTask.append(addedTask)
-
-            print("\nTask added successfully!")
             save_tasks(myTask)
+        print("\nTasks added successfully!")
         return newTask
 
     except ValueError:
@@ -84,47 +89,65 @@ def removeTask(myTask):
 
     return newTaskList
         
+# Main function
 print("To-Do List Python")
 
 numOfTask = int(input("\nEnter the number of task : "))
 
 myTask = []
+tasksDone = []
 
-myTask = load_tasks()
+myTask = load_tasks() or []
+tasksDone = load_tasks() or []
 
 for i in range(numOfTask):
     task = input("Enter task : ")
     myTask.append(task)
 
 while True:
-    print("\nSelect a choice : ")
-    print("[1]Show Tasks")
-    print("[2]Done Task")
-    print("[3]Add Task")
-    print("[4]Remove Task")
-    print("[0]Exit")
+    try:
+        print("\nSelect a choice : ")
+        print("[1]Show Tasks")
+        print("[2]Done Task")
+        print("[3]Add Task")
+        print("[4]Show Tasks Done")
+        print("[5]Remove Task")
+        print("[0]Exit")
 
-    yourChoice = int(input("\nEnter choice : "))
+        yourChoice = int(input("\nEnter choice : "))
 
-    if len(myTask) == 0:
-        print("\nNo task available.")
+        if yourChoice == 1:
+            if myTask is not None:
+                for i, task in enumerate(myTask):
+                    print(f"Task {i}: {task}")
+            else:
+                print("\nNo available tasks.")
+        elif yourChoice == 2:
+            done = int(input("Select (-1 to exit): "))
+            myTask = doneTask(myTask, done)   
+        elif yourChoice == 3:
+            myTask = addTask(myTask)
+        elif yourChoice == 4:
+            for i, task in enumerate(tasksDone):
+                print(f"{i}: {task}")
 
-    if yourChoice == 1:
-       for i, task in enumerate(myTask):
-        print(f"{i}: {task}")  
-    elif yourChoice == 2:
-        myTask = doneTask(myTask)   
-    elif yourChoice == 3:
-        myTask = addTask(myTask) 
-    elif yourChoice == 4:
-        myTask = removeTask(myTask)
-    elif yourChoice == 0:
-        print("\nAPP Exiting...")
-        save_tasks(myTask)
-        break
-    else:
-        print("\nInvalid Choice!")
+            delete = input("\nDelete all done task? (yes/no): ")
 
+            if delete.lower() == "yes":
+                tasksDone = []
+                print("\nDeleted successfully!")
+            elif delete.lower() == "no":
+                continue
+        elif yourChoice == 5:
+            myTask = removeTask(myTask)
+        elif yourChoice == 0:
+            print("\nAPP Exiting...")
+            save_tasks(myTask)
+            save_tasks(tasksDone)
+            break
+        else:
+            print("\nInvalid Choice!")
+    except ValueError:
+            print("\nError ocured please try again.")
 
-
-
+ 
