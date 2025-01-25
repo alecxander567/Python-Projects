@@ -1,108 +1,124 @@
 import json
 import os
 
-def load_tasks():
-    if os.path.exists("local_storage.json"):
-        try:
-            with open("local_storage.json", "r") as file:
-                return json.load(file)
-        except json.JSONDecodeError:
-            print("Error: Could not decode JSON. Starting with an empty list.")
-            return []
-    return []
+def doneTask(myTask, tasksDone):
+  while True:
+        print("\nSelect a task to mark as done:")
 
-def save_tasks(myTask):
-    with open("local_storage.json", "w") as file:
-        json.dump(myTask, file)
+        if not myTask:
+            print("\nAll tasks are done.")
+            return myTask, tasksDone
+        else:
+            for i, task in enumerate(myTask):
+                print(f"{i}: {task}")
 
-def doneTask(myTask, done):
-    while True:
-        if len(myTask) == 0:
-            print("\nNo available tasks.")
-            break
-
-        print("\nSelect a task finished : ")
-
-        for i, task in enumerate(myTask):
-            print(f"{i}: {task}")
-
-        print("\n")
+        done = int(input("Select (-1 to exit): "))
 
         if done == -1:
-            break
+            return myTask, tasksDone 
 
         if done < 0 or done >= len(myTask):
             print("\nTask not in the list")
             continue
-        
-        tasksDone.append(myTask.pop(done))
-        if  myTask == None:
-            print("\nAll task are done!")
-            break
 
-        print("\nTask done!")
-        save_tasks(myTask)
-        save_tasks(tasksDone)
-        return myTask
-    
+        tasksDone.append(myTask.pop(done))
+        if len(myTask) == 0:
+            print("\nAll tasks are done!")
+            return myTask, tasksDone
+
+        print("\nTask marked as done!")
+        save_tasks(myTask, tasksDone)
+        return myTask, tasksDone
+
 def addTask(myTask):
-    newTask = []
     try:
         add = int(input("\nEnter how many task to add : "))
 
         if add <= 0:
             print("\n0 and negative numbers are not allowed!")
             return myTask
-        
-        if myTask == None:
-            print("\nAdd task : ")
-        else:
-            newTask = myTask.copy()
-
-        for i in range(add):
-            addedTask = input("Enter the tasks to add : ")
-            newTask.append(addedTask)
-            save_tasks(myTask)
+        else:      
+            for i in range(add):
+                addedTask = input("Enter the tasks to add : ")
+                myTask.append(addedTask)
+           
+        save_tasks(myTask)
         print("\nTasks added successfully!")
-        return newTask
+        return myTask
 
     except ValueError:
         print("\nPlease enter a valid number")
-        return myTask
     
 def removeTask(myTask):
-    for i, task in enumerate(myTask):
-        print(f"{i}: {task}")
+    while True:
+        try:
+            
+            print("\n1. Remove a task")
+            print("2. Delete all task")
+            print("0. Exit")
 
-    removedTask = int(input("\nSelect the task to remove : "))
+            delete = int(input("\nSelect an option : "))
 
-    if removedTask < 0 or removedTask >= len(myTask):
-        print("\nTask to remove not in the list!")
-        return myTask
-    
-    myTask.pop(removedTask)
+            if delete == 1:
+                if not myTask:
+                    print("\nNo tasks available to remove.")
+                    continue
+                
+                for i, task in enumerate(myTask):
+                 print(f"{i}: {task}")
 
-    newTaskList = myTask.copy()
+                fromTask = int(input("\nSelect a task to remove : "))
 
-    print("\nTask removed successfully!")
-    save_tasks(myTask)
+                if fromTask < 0 or fromTask >= len(myTask):
+                    print("\nTask to remove not found!")
+                    continue
 
-    return newTaskList
-        
+                myTask.pop(fromTask)
+
+                print(f"\nSuccessfully deleted")                  
+            elif delete == 2:
+                clarify = input("\nAre you sure to delete all task? (y/n) : ")
+
+                if clarify.lower() == "y":
+                    myTask.clear()
+                    print("\nSuccessfully deleted!")
+                else:
+                    print("\nNo tasks deleted.")
+            elif delete == 0:
+                break
+
+            return myTask
+        except ValueError:
+            print("\nInvalid input. Please enter from the options")
+            continue
+
+def load_tasks():
+    try:
+        if os.path.exists("local_storage.json"):
+            with open("local_storage.json", "r") as file:
+                data = json.load(file)
+                tasks = data.get("tasks", [])
+                completed_tasks = data.get("completed_tasks", [])
+                return tasks if tasks is not None else [], completed_tasks if completed_tasks is not None else []
+        return [], []
+    except json.JSONDecodeError:
+        print("Error: Corrupted JSON file. Starting with an empty task list.")
+        return [], []
+    except Exception as e:
+        print(f"Error loading tasks: {e}")
+        return [], []
+
+def save_tasks(myTask, tasksDone=None):
+    try:
+        with open("local_storage.json", "w") as file:
+            json.dump({"tasks": myTask, "completed_tasks": tasksDone or []}, file, indent=4)
+    except Exception as e:
+        print(f"Error saving tasks: {e}")
+
 # Main function
 print("To-Do List Python")
 
-numOfTask = int(input("\nEnter the number of task : "))
-
-myTask = []
-tasksDone = []
-
-myTask = load_tasks() or []
-tasksDone = load_tasks() or []
-
-for i in range(numOfTask):
-    task = input("Enter task : ")
-    myTask.append(task)
+myTask, tasksDone = load_tasks() 
 
 while True:
     try:
@@ -117,37 +133,39 @@ while True:
         yourChoice = int(input("\nEnter choice : "))
 
         if yourChoice == 1:
-            if myTask is not None:
-                for i, task in enumerate(myTask):
-                    print(f"Task {i}: {task}")
-            else:
+            if not myTask:
                 print("\nNo available tasks.")
+            else:
+                for i, task in enumerate(myTask):
+                    print(f"{i}: {task}")
         elif yourChoice == 2:
-            done = int(input("Select (-1 to exit): "))
-            myTask = doneTask(myTask, done)   
+            myTask, tasksDone = doneTask(myTask, tasksDone)
         elif yourChoice == 3:
             myTask = addTask(myTask)
         elif yourChoice == 4:
-            for i, task in enumerate(tasksDone):
-                print(f"{i}: {task}")
+            if not tasksDone:
+                print("\nNo tasks completed yet.")
+            else:
+                for i, task in enumerate(tasksDone):
+                    print(f"{i}: {task}")
 
-            delete = input("\nDelete all done task? (yes/no): ")
+            delete = input("\nDelete all done tasks? (yes/no): ")
 
             if delete.lower() == "yes":
-                tasksDone = []
-                print("\nDeleted successfully!")
+                tasksDone.clear()
+                print("\nAll completed tasks deleted successfully!")
             elif delete.lower() == "no":
                 continue
         elif yourChoice == 5:
             myTask = removeTask(myTask)
+            save_tasks(myTask, tasksDone)
         elif yourChoice == 0:
             print("\nAPP Exiting...")
-            save_tasks(myTask)
-            save_tasks(tasksDone)
+            save_tasks(myTask, tasksDone)
             break
         else:
-            print("\nInvalid Choice!")
+            print("\nInvalid Choice! Please try again.")
     except ValueError:
-            print("\nError ocured please try again.")
+            print("\nInvalid input. Please try again.")
 
  
