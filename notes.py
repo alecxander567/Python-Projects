@@ -71,6 +71,33 @@ def removeNote(myNote):
             print("\nPlease enter a valid number")
             
 
+# Function to edit a note
+def editNote(myNote):
+        try:
+            if not myNote:
+                print("\nNo notes to edit.")
+                return myNote
+            else: 
+                for i, note in enumerate(myNote):
+                    print(f"{i}:{note}")
+                       
+            fromNote = int(input("\nSelect the note to edit : "))
+            
+            if fromNote < 0 or fromNote >= len(myNote):
+                print("\nNote to edit not found!")
+                return myNote
+            else:
+                editedNote = input("\nEnter the edited note : ")
+                current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                myNoteEdit = f"{editedNote} \n\n- {current_date}"
+                myNote[fromNote] = myNoteEdit
+                print("\nNote edited successfully!")
+                return myNote
+                
+        except ValueError:
+            print("\nPlease enter a valid number")
+            
+
 # Function to save notes      
 def save_notes(myNote):
     with open("local_storage.json", "w") as file:
@@ -106,6 +133,7 @@ while True:
         print("\n1. Add a note")
         print("2. View all notes")
         print("3. Remove a note")
+        print("4. Edit a note")
         print("0. Exit")
             
         print("\nSelect an option : ")
@@ -121,6 +149,8 @@ while True:
                     print(f"\n{i}: {note}")
         elif yourChoice == 3:
             myNote = removeNote(myNote)
+        elif yourChoice == 4:
+            myNote = editNote(myNote)
         elif yourChoice == 0:
             print("\nApp exiting...")
             save_notes(myNote)
