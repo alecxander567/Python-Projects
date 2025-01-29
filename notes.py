@@ -3,8 +3,7 @@ import json
 from datetime import datetime
 
 # Adding notes function
-def addNote(myNote):
-    try:
+def addNote(myNote):    
         addedNote = input("Enter the note to add :  ")
         current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         noteWithDate = f"{addedNote} \n\n- {current_date}"
@@ -12,12 +11,7 @@ def addNote(myNote):
         
         print("\nNote added successfully!")
         return myNote   
-    
-    except ValueError:
-        print("\nPlease enter a valid number")        
-        return myNote
-
-
+        
 # Function to remove a note
 def removeNote(myNote):
     while True:
