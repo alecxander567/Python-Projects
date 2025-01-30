@@ -30,9 +30,4 @@ while True:
         print("Operator not found")
 
      print("Result : ", result)
-    
-
-
-     
-
 
