@@ -38,6 +38,7 @@ def starTime(seconds, minutes, hours):
         curses.endwin()
         
         print(f"\n{hours_left:02d}:{minutes_left:02d}:{seconds_left:02d}")
+        print("\nTimer stopped!")
 
          
 # Main Function
@@ -56,16 +57,11 @@ while True:
             minutes = int(input("Enter minutes : "))
             seconds = int(input("Enter seconds : "))
             starTime(seconds, minutes, hours)
-        elif option == "2":
+        elif option == "0":
             print("\nExiting...")
             break
-        elif option == "q":
-            print("\nTimer stopped!")
     except ValueError:
         print("\nInvalid input! Please try again.")
         continue
             
-    
-
-    
     
