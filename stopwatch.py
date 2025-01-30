@@ -11,8 +11,12 @@ def starTime(seconds, minutes, hours):
         stdscr.keypad(True)
         curses.halfdelay(1) 
 
-        for _ in range(total_seconds):
-            remaining_time = total_seconds - _
+        for i in range(total_seconds + 1):
+            remaining_time = total_seconds - i
+            
+            if remaining_time < 0:  
+                break
+            
             hours_left = remaining_time // 3600
             minutes_left = (remaining_time // 60) % 60
             seconds_left = remaining_time % 60
@@ -21,15 +25,14 @@ def starTime(seconds, minutes, hours):
             time.sleep(1)
             
             # Check if the user pressed the 'q' key
-            if stdscr.getch() == ord('q'):
+            if stdscr.getch() == ord('q') or remaining_time == 0:
              break
 
-        if _ < total_seconds - 1:
+        if i < total_seconds - 1:
             stdscr.addstr(1, 0, "Timer stopped!")
         else:
             stdscr.addstr(1, 0, "Timer finished!")
 
-            
             stdscr.refresh()
 
         curses.nocbreak()
@@ -64,4 +67,3 @@ while True:
         print("\nInvalid input! Please try again.")
         continue
             
-    
