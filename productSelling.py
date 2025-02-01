@@ -147,14 +147,59 @@ def view_products_bought(basket, budget):
     # Check if the basket is empty
     if not basket:
         print("\nYou have no items bought.")
-        return basket
     
     # Print budget
     print("\nRemaining budget : ", budget)
     
+    while True:
+       try:
+           print("\n1. Remove an item")
+           print("2. Remove all items")
+           print("0. Exit")
+        
+           choice = int(input("\nSelect a choice : "))
+        
+           if choice == 1:
+               # Check if you have bought any products if none it will return to menu
+                if not basket:
+                    print("\nYou have no items bought.")
+                    continue
+                
+                delete = int(input("\nSelect the item to delete : "))
+             
+                # If the item is found then delete or if not return to menu
+                if 0 <= delete < len(basket):
+                    basket.pop(delete)
+                    print("\nSuccessfully removed!")
+                else:
+                    print("\nItem to remove not in the basket!")
+           elif choice == 2:
+                # Check if there are any items
+                if not basket:
+                    print("\nYou have no items bought.")
+                    continue
+                
+                clarify = input("\nAre you sure you want to delete all items? (yes/no): ")
+            
+                if clarify.lower() == "yes":
+                    basket.clear()
+                    print("\nAll items deleted!")
+                elif clarify.lower() == "no":
+                    print("\nNo items deleted!")
+                else:
+                    print("\nPlease type yes or no only")
+           elif choice == 0:
+               break
+           else:
+               print("\nInput not in the menu!")
+           
+       except ValueError:
+           print("\nInput invalid!")
+           continue
+           
     return basket, budget
-
-
+       
+    
 print("Welcome to the product selling store.")
 
 products = []
