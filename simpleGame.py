@@ -107,7 +107,7 @@ def start_game(your_hp, enemy_hp, quiz):
                 
                     else:
                         print("\n❌ Wrong! The enemy attacks you.")
-                        # Damahe you 
+                        # Damage you 
                         your_hp -= 50
                         
                         # Shows update of your HP and enemy HP
