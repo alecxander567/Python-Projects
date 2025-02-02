@@ -247,7 +247,7 @@ while True:
         choice = int(input("\nEnter your choice : "))
         
         if choice == 1:
-            hp = start_game(your_hp, enemy_hp, quiz)
+            start_game(your_hp, enemy_hp, quiz)
         elif choice == 0:
             print("\nGame exiting...")
             break
