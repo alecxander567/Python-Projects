@@ -199,8 +199,9 @@ def view_products_bought(basket, budget):
            
     return basket, budget
        
-    
-print("Welcome to the product selling store.")
+
+# Main Function
+print("wELCOME TO PRODUCT SELLING PROGRAM IN PYTHON")
 
 products = []
 basket = []
