@@ -9,7 +9,7 @@ root.title("Simple Obstacle Game")
 root.geometry("1000x1000")
 
 
-# For the shape
+# For the circle and the canvas
 canvas_width = 1000
 canvas_height = 300
 canvas = tk.Canvas(root, width=canvas_width, height=canvas_height, bg="white")
@@ -184,6 +184,7 @@ def set_hard_level():
     obstacle_interval = 2000
 
     restart_game()
+
 
 # Buttons for restart, medium, hard, and clear high score
 restart_button = tk.Button(root, text="Restart", font=("Arial", 14), command=restart_game, state=tk.DISABLED, fg="blue")
