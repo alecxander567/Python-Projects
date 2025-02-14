@@ -5,6 +5,7 @@ import random
 # Clear screen Function
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
+    
 
 # Quiz Function
 def your_motivation_for_today(based_survey, motivation):
@@ -31,6 +32,7 @@ def your_motivation_for_today(based_survey, motivation):
         time.sleep(1)
     
     return motivation
+
     
 # Main Function
 print("Motivation Quiz")
